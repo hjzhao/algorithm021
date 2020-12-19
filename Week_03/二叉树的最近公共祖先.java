@@ -57,6 +57,8 @@ class Solution {
             return false;
         }
 
+        //process current logic
+
         // drill down
         boolean leftRes = dfs(root.left, p, q, ancestor);
         boolean rightRes = dfs(root.right, p, q, ancestor);
@@ -105,6 +107,8 @@ class Solution2 {
         } else if (root == p || root == q) {
             return root;
         }
+
+        //process current logic
 
         // drill down
         TreeNode left = lowestCommonAncestor(root.left, p, q);
