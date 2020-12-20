@@ -32,8 +32,6 @@ class Solution {
         if (ans.size() + n < k) {
             return;
         }
-
-        //process current logic 记录满足条件的答案
         if (ans.size() == k) {
             result.add(new ArrayList<Integer>(ans));
             return;
