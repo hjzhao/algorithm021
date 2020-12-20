@@ -30,7 +30,6 @@ class Solution {
     public void dfs(int n, int k) {
         //recursion terminator 结束递归
         if (ans.size() + n < k) {
-            System.out.println(n);
             return;
         }
 
