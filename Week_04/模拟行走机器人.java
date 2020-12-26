@@ -84,13 +84,16 @@ class Solution4_2 {
     public int robotSim(int[] commands, int[][] obstacles) {
         int x = 0;
         int y = 0;
+        //设置移动xy方向的对应值
         int[] dx = new int[]{0, 1, 0, -1};
         int[] dy = new int[]{1, 0, -1, 0};
-        int v = 0;
-        Set<Long> set = new HashSet<>();
+        int v = 0; //用来标记当前对应 dx dy的值
+        Set<Long> set = new HashSet<>(); //用来存储障碍物，因为需要位移int，所以使用long
         int res = 0;
         for (int o = 0; o < obstacles.length; o++) {
-            set.add((long)obstacles[o][0] << 14 & obstacles[o][1]);
+            //10000 二进制长度为 14，^等同于+操做
+            // << 优先级高于 ^
+            set.add((long)obstacles[o][0] << 14 ^ obstacles[o][1]);
         }
 
         for (int i = 0; i < commands.length; i++) {
@@ -102,13 +105,14 @@ class Solution4_2 {
                 for (int j = 0; j < commands[i]; j++) {
                     int tempX = x + dx[v];
                     int tempY = y + dy[v];
-                    if (set.contains((long)tempX << 14 & tempY)) {
+                    if (set.contains((long)tempX << 14 ^ tempY)) {
                         break;
                     }
                     x = tempX;
                     y = tempY;
-                    res = Math.max(res, x * x + y * y);
                 }
+                //因为是单一方向行走，所以可以行走完成之后计算最大距离
+                res = Math.max(res, x * x + y * y);
             }
         }
         return res;
