@@ -73,9 +73,9 @@
  * 优化：
  *   因为一开始思路 HashSet 使用 String类型作为值，而String的比较比较慢
  *  参考题解后：
- *   因为xy坐标的值为int，所以可以考虑使用 int 作为 HashSet的值 来加快比较速度
- *     10000 的二进制长度为 14，那么将 当前x坐标值 向左位移 14，预留后14位用来加上 y坐标值
- *     x << 14后，位移后的二进制数后14位为0，再通过异或 y 的方式实现 +操做
+ *   因为障碍物xy坐标的值为int，所以可以考虑使用 int 作为 HashSet的值 来加快比较速度
+ *     当前障碍物x坐标值 向左位移 16位，预留后16位用来加上 y坐标值
+ *     x << 16后，位移后的二进制数后16位为0，再 + y坐标
  *
  * 最后代码逻辑如下：
  */
@@ -88,12 +88,12 @@ class Solution4_2 {
         int[] dx = new int[]{0, 1, 0, -1};
         int[] dy = new int[]{1, 0, -1, 0};
         int v = 0; //用来标记当前对应 dx dy的值
-        Set<Long> set = new HashSet<>(); //用来存储障碍物，因为需要位移int，所以使用long
+
+        Set<Integer> set = new HashSet<>();
         int res = 0;
         for (int o = 0; o < obstacles.length; o++) {
-            //10000 二进制长度为 14，^等同于+操做
-            // << 优先级高于 ^
-            set.add((long)obstacles[o][0] << 14 ^ obstacles[o][1]);
+            //取值-30000 ~ 30000，有符号short取值范围，向左位移16位
+            set.add((obstacles[o][0] << 16) + obstacles[o][1]);
         }
 
         for (int i = 0; i < commands.length; i++) {
@@ -105,7 +105,7 @@ class Solution4_2 {
                 for (int j = 0; j < commands[i]; j++) {
                     int tempX = x + dx[v];
                     int tempY = y + dy[v];
-                    if (set.contains((long)tempX << 14 ^ tempY)) {
+                    if (set.contains((tempX << 16) + tempY)) {
                         break;
                     }
                     x = tempX;
