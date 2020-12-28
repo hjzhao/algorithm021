@@ -74,7 +74,7 @@
  *   因为一开始思路 HashSet 使用 String类型作为值，而String的比较比较慢
  *  参考题解后：
  *   因为障碍物xy坐标的值为int，所以可以考虑使用 int 作为 HashSet的值 来加快比较速度
- *     当前障碍物x坐标值 向左位移 16位，预留后16位用来加上 y坐标值
+ *     当前障碍物x坐标值为short取值范围，向左位移 16位，预留后16位用来加上 y坐标值
  *     x << 16后，位移后的二进制数后16位为0，再 + y坐标
  *
  * 最后代码逻辑如下：
@@ -92,8 +92,9 @@ class Solution4_2 {
         Set<Integer> set = new HashSet<>();
         int res = 0;
         for (int o = 0; o < obstacles.length; o++) {
-            //取值-30000 ~ 30000，有符号short取值范围，向左位移16位
-            set.add((obstacles[o][0] << 16) + obstacles[o][1]);
+            //取值-30000 ~ 30000，有符号short取值范围内
+            //x坐标向左位移16位，然后再异或y坐标
+            set.add((obstacles[o][0] << 16) ^ obstacles[o][1]);
         }
 
         for (int i = 0; i < commands.length; i++) {
@@ -105,7 +106,7 @@ class Solution4_2 {
                 for (int j = 0; j < commands[i]; j++) {
                     int tempX = x + dx[v];
                     int tempY = y + dy[v];
-                    if (set.contains((tempX << 16) + tempY)) {
+                    if (set.contains((tempX << 16) ^ tempY)) {
                         break;
                     }
                     x = tempX;
